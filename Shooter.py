@@ -1,5 +1,5 @@
 from random import randint
-from time import as timer
+from time import time as timer
 from pygame import *
 
 init()
@@ -66,7 +66,7 @@ class Player (GameSprite):
             self.rect.x -=self.speed
         if keys_pressed[K_a] and self.rect.x <WIDTH - self.rect.width - 5:
             self.rect.x += self.speed
-        if keys_pressed[K_SPACE] and self.kd <= 0) and (self.clip >= 0 and not self.reload):
+        if keys_pressed([K_SPACE] and self.kd <= 0) and (self.clip >= 0 and not self.reload):
             bullet = Bullet(self.rect.centerx - HEIGHT // 50, self.rect.top)
             bullets.add(bullet)
             shoot.play()
@@ -288,4 +288,3 @@ while game:
 
     display.update()
     clock.tick(FPS)
-
