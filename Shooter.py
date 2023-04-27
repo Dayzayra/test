@@ -30,16 +30,16 @@ text_win = font_finish.render("You WIN!", True, (50, 250, 50))
 text_lose = font_finish.render("You LOSE!", True, (250, 50, 50))
 
 lost = 0
-text_lost = fron_interface.render("Пропущено: "+ str(lost), True, (255, 255, 255))
+text_lost = font_interface.render("Пропущено: " + str(lost), True, (255, 255, 255))
 
 score = 0
-text_score = font_interface.render("Рахунок: " + str (lodt), True, (255, 255, 255))
+text_score = font_interface.render("Рахунок: " + str(lost), True, (255, 255, 255))
 
 
 class GameSprite(sprite.Sprite):
-    def __init__(self, sprite_imege, x, y, width, height, speed):
+    def __init__(self, sprite_image, x, y, width, height, speed):
         super().__init__()
-        self.image = transform.scale(image.load(sprite_imege),(width, height))
+        self.image = transform.scale(image.load(sprite_image), (width, height))
         self.speed = speed
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -49,7 +49,7 @@ class GameSprite(sprite.Sprite):
         window.blit(self.image, (self.rect.x, self.rect.y))
 
 
-class Player (GameSprite):
+class Player(GameSprite):
     def __init__(self, x, y):
         super().__init__("images/rocket.png", x, y, HEIGHT // 6, HEIGHT // 5, HEIGHT // 50)
         self.kd = 0
@@ -63,15 +63,15 @@ class Player (GameSprite):
         keys_pressed = key.get_pressed()
 
         if keys_pressed[K_a] and self.rect.x > 5:
-            self.rect.x -=self.speed
-        if keys_pressed[K_a] and self.rect.x <WIDTH - self.rect.width - 5:
+            self.rect.x -= self.speed
+        if keys_pressed[K_d] and self.rect.x < WIDTH - self.rect.width - 5:
             self.rect.x += self.speed
-        if keys_pressed([K_SPACE] and self.kd <= 0) and (self.clip >= 0 and not self.reload):
+        if (keys_pressed[K_SPACE] and self.kd <= 0) and (self.clip >= 0 and not self.reload):
             bullet = Bullet(self.rect.centerx - HEIGHT // 50, self.rect.top)
             bullets.add(bullet)
             shoot.play()
             self.clip -= 1
-            interface_clip = interface_clip[:=1]
+            interface_clip = interface_clip[:-1]
             self.kd = 10
         else:
             self.kd -= 1
@@ -122,7 +122,7 @@ class UfoBoss(GameSprite):
         if self.rect.y >= HEIGHT:
             lost += 3
             self.kill()
-            text_lost = fron_interface.render("Пропущено: " + str(lost), True, (255, 255, 255))
+            text_lost = font_interface.render("Пропущено: " + str(lost), True, (255, 255, 255))
 
 
 class Bullet(GameSprite):
@@ -171,7 +171,7 @@ for i in range(player.clip):
 
 boss = 0
 
-bullets = sprite.Group
+bullets = sprite.Group()
 
 health = []
 
@@ -203,10 +203,10 @@ while game:
         asteroids.update()
         asteroids.draw(window)
 
-        crush_list = sprite.spritecollide(player, monster, False)
+        crush_list = sprite.spritecollide(player, monsters, False)
         crush_list_asteroids = sprite.spritecollide(player, asteroids, False)
 
-        dead_monsers = sprite.groupcollide(monster, bullets, False, True)
+        dead_monsters = sprite.groupcollide(monsters, bullets, False, True)
         hit_asteroids = sprite.groupcollide(asteroids, bullets, False, True)
 
         if not boss:
@@ -235,14 +235,14 @@ while game:
                     health = GameSprite("images/health.png", heart_x, HEIGHT // 15, HEIGHT // 14, HEIGHT // 14, 0)
                     health.append(heart)
 
-        if len(dead_monsers) != 0:
+        if len(dead_monsters) != 0:
             score += 1
             text_score = font_interface.render("Рахунок: " + str(score), True, (255, 255, 255))
-            for monster in dead_monsers:
+            for monster in dead_monsters:
                 monster.rect.x = randint(0, WIDTH - HEIGHT // 5)
                 monster.rect.y = randint(-HEIGHT, -HEIGHT // 7)
 
-        if len(crush_list) !=0:
+        if len(crush_list) != 0:
             player.hp -= 1
             try:
                 health = health[:-1]
@@ -254,7 +254,7 @@ while game:
                 monster.rect.x = randint(0, WIDTH - HEIGHT // 5)
                 monster.rect.y = randint(-HEIGHT, -HEIGHT // 7)
 
-        if len(crush_list_asteroids) !=0:
+        if len(crush_list_asteroids) != 0:
             player.hp -= 1
             try:
                 health = health[:-1]
